@@ -9,7 +9,7 @@ const Message = require("../model/messages");
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_FOR_NODEMAILER,
+    user: process.env.EMAIL_FOR_NODEMAILER, 
     pass: process.env.PASSWORD_FOR_NODEMAILER,
   },
 });
