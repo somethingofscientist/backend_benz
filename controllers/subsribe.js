@@ -114,3 +114,61 @@ module.exports.message = [
     }
   }
 ];
+
+// subscribe only with email ref
+
+module.exports.subscriber_email = [
+  // body("name").not().isEmpty().withMessage("Body Field is required"),
+  body("email").not().isEmpty().withMessage("Email Field is required"),
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+      } else {
+        const { email } = req.body;
+        let mailOptions = {
+          from: process.env.EMAIL_FOR_NODEMAILER,
+          subject: "Subscription Request",
+          to: process.env.TO_EMAIL,
+          // template: "subscription", to do later for betterment
+          html: `<p> Hi, ${email} has requested to Subscribe Benz Packaging. </p>`,
+        };
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            res.status(400).json({ error: "error while sending mail" });
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+        let customerMailOptions = {
+          from: process.env.EMAIL_FOR_NODEMAILER,
+          subject: "Subscribed for Benz Packaging",
+          to: email,
+          // template: "subscription", to do later for betterment
+          html: `<p>
+          Hi, ${email} <br> 
+          This mail is to inform you that you have subscribed to Benz Packaging Successfully. </p>`,
+        };
+        transporter.sendMail(customerMailOptions, function (error, info) {
+          if (error) {
+            res.status(400).json({ error: "error while sending mail" });
+            console.log(error);
+          } else {
+            console.log("Email sent: " + info.response);
+          }
+        });
+        const subsciber = new Subscription({
+          email,
+        });
+        await subsciber.save();
+        res.status(200).json({ message: "successfull", subsciber });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
+];
