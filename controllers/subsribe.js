@@ -45,7 +45,9 @@ module.exports.subscriber = [
           subject: "Subscribed for Benz Packaging",
           to: email,
           // template: "subscription", to do later for betterment
-          html: `<p> Hi, <br> This mail is to inform you that you have subscribed to Benz Packaging Successfully. </p>`,
+          html: `<p>
+          Hi, ${name} <br> 
+          This mail is to inform you that you have subscribed to Benz Packaging Successfully. </p>`,
         };
         transporter.sendMail(customerMailOptions, function (error, info) {
           if (error) {
