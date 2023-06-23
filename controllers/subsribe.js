@@ -2,8 +2,9 @@ const express = require("express");
 const dotenv = require("dotenv").config();
 const nodemailer = require("nodemailer");
 const path = require("path");
-const Subscription = require("../model/subscriptions");
 const { body, validationResult } = require("express-validator");
+const Subscription = require("../model/subscriptions");
+const OnlyEmail = require("../model/onlyemail");
 const Message = require("../model/messages");
 
 const transporter = nodemailer.createTransport({
@@ -160,7 +161,7 @@ module.exports.subscriber_email = [
             console.log("Email sent: " + info.response);
           }
         });
-        const subsciber = new Subscription({
+        const subsciber = new OnlyEmail({
           email,
         });
         await subsciber.save();
