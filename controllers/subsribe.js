@@ -264,11 +264,11 @@ module.exports.distributor = [
 ];
 
 module.exports.resume = [
-  body("firstName").not().isEmpty().withMessage("Name Field is required"),
-  body("lastName").not().isEmpty().withMessage("Last Name Field is required"),
-  body("phone").not().isEmpty().withMessage("Phone Field is required"),
-  body("address1").not().isEmpty().withMessage("address Field is required"),
-  body("address2").not().isEmpty().withMessage("address Field is required"),
+  // body("firstName").not().isEmpty().withMessage("Name Field is required"),
+  // body("lastName").not().isEmpty().withMessage("Last Name Field is required"),
+  // body("phone").not().isEmpty().withMessage("Phone Field is required"),
+  // body("address1").not().isEmpty().withMessage("address Field is required"),
+  // body("address2").not().isEmpty().withMessage("address Field is required"),
 
   async (req, res) => {
     try {
