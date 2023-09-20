@@ -6,11 +6,12 @@ const { body, validationResult } = require("express-validator");
 const Subscription = require("../model/subscriptions");
 const OnlyEmail = require("../model/onlyemail");
 const Message = require("../model/messages");
+const Distributor = require("../model/distributor");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_FOR_NODEMAILER, 
+    user: process.env.EMAIL_FOR_NODEMAILER,
     pass: process.env.PASSWORD_FOR_NODEMAILER,
   },
 });
@@ -116,8 +117,6 @@ module.exports.message = [
   }
 ];
 
-// subscribe only with email ref
-
 module.exports.subscriber_email = [
   // body("name").not().isEmpty().withMessage("Body Field is required"),
   body("email").not().isEmpty().withMessage("Email Field is required"),
@@ -172,4 +171,93 @@ module.exports.subscriber_email = [
       res.status(500).json(error);
     }
   },
+];
+
+module.exports.distributor = [
+  body("name").not().isEmpty().withMessage("Name Field is required"),
+  body("companyName").not().isEmpty().withMessage("Company Name Field is required"),
+  body("address").not().isEmpty().withMessage("address Field is required"),
+  body("operatingYears").not().isEmpty().withMessage("operatingYears Field is required"),
+  body("investment").not().isEmpty().withMessage("investment Field is required"),
+  body("hasVehicle").not().isEmpty().withMessage("hasVehicle Field is required"),
+  body("phone").not().isEmpty().withMessage("phone Field is required"),
+  body("bankName").not().isEmpty().withMessage("bankName Field is required"),
+  body("operatingYearsBank").not().isEmpty().withMessage("operatingYearsBank Field is required"),
+  body("area").not().isEmpty().withMessage("area Field is required"),
+  body("officerName").not().isEmpty().withMessage("officerName Field is required"),
+  body("position").not().isEmpty().withMessage("position Field is required"),
+  body("signature").not().isEmpty().withMessage("signature Field is required"),
+
+  async (req, res) => {
+    try {
+      console.log('we are in try block')
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+      }
+      else {
+        const {
+          name,
+          companyName,
+          address,
+          operatingYears,
+          investment,
+          hasVehicle,
+          phone,
+          bankName,
+          operatingYearsBank,
+          area,
+          officerName,
+          position,
+          signature,
+        } = req.body;
+
+        // Create a new Distributor instance and save it to the database
+        const distributor = new Distributor({
+          name,
+          companyName,
+          address,
+          operatingYears: Number(operatingYears),
+          investment: Number(investment),
+          hasVehicle: Boolean(hasVehicle),
+          phone: Number(phone),
+          bankName,
+          operatingYearsBank: Number(operatingYearsBank),
+          area,
+          officerName,
+          position,
+          signature,
+        });
+
+        await distributor.save();
+
+        // Send email notification to your personal email address
+        let mailOptions = {
+          from: process.env.EMAIL_FOR_NODEMAILER,
+          subject: 'Distributor Application',
+          to: process.env.TO_EMAIL,
+          html: `
+            <p>Hi,</p>
+            <p>A new distributor application has been submitted with the following details:</p>
+            <p>Name: ${name}</p>
+            <p>Company Name: ${companyName}</p>
+            <p>Address: ${address}</p>
+          `,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+
+        res.status(200).json({ message: 'Successful', distributor });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
 ];
