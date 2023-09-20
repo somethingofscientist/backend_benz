@@ -7,6 +7,7 @@ const Subscription = require("../model/subscriptions");
 const OnlyEmail = require("../model/onlyemail");
 const Message = require("../model/messages");
 const Distributor = require("../model/distributor");
+const Resume = require("../model/resume");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -254,6 +255,73 @@ module.exports.distributor = [
         });
 
         res.status(200).json({ message: 'Successful', distributor });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
+];
+
+module.exports.resume = [
+  body("firstName").not().isEmpty().withMessage("Name Field is required"),
+  body("lastName").not().isEmpty().withMessage("Last Name Field is required"),
+  body("phone").not().isEmpty().withMessage("Phone Field is required"),
+  body("address1").not().isEmpty().withMessage("address Field is required"),
+  body("address2").not().isEmpty().withMessage("address Field is required"),
+
+  async (req, res) => {
+    try {
+      console.log('we are in try block')
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json(errors);
+      }
+      else {
+        const {
+          fistName,
+          lastName,
+          phone,
+          address1,
+          address2,
+        } = req.body;
+
+        // Create a new Distributor instance and save it to the database
+        const resume = new Resume({
+          fistName,
+          lastName,
+          phone,
+          address1,
+          address2,
+        });
+
+        await resume.save();
+
+        // Send email notification to your personal email address
+        let mailOptions = {
+          from: process.env.EMAIL_FOR_NODEMAILER,
+          subject: 'Resume Application',
+          to: process.env.TO_EMAIL,
+          html: `
+            <p>Hi,</p>
+            <p>A new Resume has been submitted with the following details:</p>
+            <p>First Name: ${fistName}</p>
+            <p>Last Name: ${lastName}</p>
+            <p>Phone ${phone}</p>
+            <p>Address: ${address1}</p>
+            <p>Address: ${address2}</p>
+          `,
+        };
+
+        transporter.sendMail(mailOptions, function (error, info) {
+          if (error) {
+            console.log(error);
+          } else {
+            console.log('Email sent: ' + info.response);
+          }
+        });
+
+        res.status(200).json({ message: 'Successful', resume });
       }
     } catch (error) {
       console.log(error);
