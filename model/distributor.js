@@ -52,7 +52,7 @@ const distributorSchema = new mongoose.Schema({
     },
     signature: {
         type: String,
-        required: true,
+        // required: true,
     },
 });
 

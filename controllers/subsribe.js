@@ -187,7 +187,7 @@ module.exports.distributor = [
   body("area").not().isEmpty().withMessage("area Field is required"),
   body("officerName").not().isEmpty().withMessage("officerName Field is required"),
   body("position").not().isEmpty().withMessage("position Field is required"),
-  body("signature").not().isEmpty().withMessage("signature Field is required"),
+  // body("signature").not().isEmpty().withMessage("signature Field is required"),
 
   async (req, res) => {
     try {
@@ -210,7 +210,7 @@ module.exports.distributor = [
           area,
           officerName,
           position,
-          signature,
+          // signature,
         } = req.body;
 
         // Create a new Distributor instance and save it to the database
@@ -227,7 +227,7 @@ module.exports.distributor = [
           area,
           officerName,
           position,
-          signature,
+          // signature,
         });
 
         await distributor.save();
@@ -238,12 +238,58 @@ module.exports.distributor = [
           subject: 'Distributor Application',
           to: process.env.TO_EMAIL,
           html: `
-            <p>Hi,</p>
+          <p> Hi,</p>
             <p>A new distributor application has been submitted with the following details:</p>
-            <p>Name: ${name}</p>
-            <p>Company Name: ${companyName}</p>
-            <p>Address: ${address}</p>
-          `,
+            <table border="1" cellpadding="5" cellspacing="0">
+              <tr>
+                <td>Name:</td>
+                <td>${name}</td>
+              </tr>
+              <tr>
+                <td>Company Name:</td>
+                <td>${companyName}</td>
+              </tr>
+              <tr>
+                <td>Address:</td>
+                <td>${address}</td>
+              </tr>
+              <tr>
+                <td>Operating Years:</td>
+                <td>${operatingYears}</td>
+              </tr>
+              <tr>
+                <td>Investment:</td>
+                <td>${investment}</td>
+              </tr>
+              <tr>
+                <td>Has Vehicle:</td>
+                <td>${hasVehicle ? 'Yes' : 'No'}</td>
+              </tr>
+              <tr>
+                <td>Phone:</td>
+                <td>${phone}</td>
+              </tr>
+              <tr>
+                <td>Name of the Bank:</td>
+                <td>${bankName}</td>
+              </tr>
+              <tr>
+                <td>Operating Years (Bank):</td>
+                <td>${operatingYearsBank}</td>
+              </tr>
+              <tr>
+                <td>Area:</td>
+                <td>${area}</td>
+              </tr>
+              <tr>
+                <td>Name of the Officer:</td>
+                <td>${officerName}</td>
+              </tr>
+              <tr>
+                <td>Position:</td>
+                <td>${position}</td>
+              </tr>
+            </table>`,
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -279,7 +325,7 @@ module.exports.resume = [
       }
       else {
         const {
-          fistName,
+          firstName,
           lastName,
           phone,
           address1,
@@ -288,7 +334,7 @@ module.exports.resume = [
 
         // Create a new Distributor instance and save it to the database
         const resume = new Resume({
-          fistName,
+          firstName,
           lastName,
           phone,
           address1,
@@ -303,14 +349,31 @@ module.exports.resume = [
           subject: 'Resume Application',
           to: process.env.TO_EMAIL,
           html: `
-            <p>Hi,</p>
+          <p> Hi,</p>
             <p>A new Resume has been submitted with the following details:</p>
-            <p>First Name: ${fistName}</p>
-            <p>Last Name: ${lastName}</p>
-            <p>Phone ${phone}</p>
-            <p>Address: ${address1}</p>
-            <p>Address: ${address2}</p>
-          `,
+            <table border="1" cellpadding="5" cellspacing="0">
+            <tr>
+              <td>First Name:</td>
+              <td>${firstName}</td>
+            </tr>
+            <tr>
+              <td>Last Name:</td>
+              <td>${lastName}</td>
+            </tr>
+            <tr>
+              <td>Phone:</td>
+              <td>${phone}</td>
+            </tr>
+            <tr>
+              <td>Address 1:</td>
+              <td>${address1}</td>
+            </tr>
+            <tr>
+              <td>Address 2:</td>
+              <td>${address2}</td>
+            </tr>
+          </table>
+        `,
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
