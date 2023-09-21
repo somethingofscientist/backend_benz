@@ -414,6 +414,7 @@ module.exports.resume = [
           }
         });
 
+        console.log('remove')
         res.status(200).json({ message: 'Successful', resume });
       }
     } catch (error) {
