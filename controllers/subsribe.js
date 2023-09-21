@@ -238,6 +238,21 @@ module.exports.distributor = [
           subject: 'Distributor Application',
           to: process.env.TO_EMAIL,
           html: `
+          <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+          }
+      
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+        </style>
           <p> Hi,</p>
             <p>A new distributor application has been submitted with the following details:</p>
             <table border="1" cellpadding="5" cellspacing="0">
@@ -349,6 +364,21 @@ module.exports.resume = [
           subject: 'Resume Application',
           to: process.env.TO_EMAIL,
           html: `
+          <style>
+          table {
+            border-collapse: collapse;
+            width: 100%;
+          }
+          
+          table, th, td {
+            border: 1px solid black;
+            padding: 5px;
+          }
+      
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+        </style>
           <p> Hi,</p>
             <p>A new Resume has been submitted with the following details:</p>
             <table border="1" cellpadding="5" cellspacing="0">
