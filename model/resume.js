@@ -4,24 +4,28 @@ const mongoose = require('mongoose');
 const resumeSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        // required: true,
     },
     lastName: {
         type: String,
-        required: true,
+        // required: true,
     },
     phone: {
         type: Number,
-        required: true,
+        // required: true,
     },
     address1: {
         type: String,
-        required: true,
+        // required: true,
     },
     address2: {
         type: String,
-        required: true,
+        // required: true,
     },
+    resumePDF: {
+        type: String,
+        // required: true,
+    }
 });
 
 

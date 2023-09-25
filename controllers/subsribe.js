@@ -9,6 +9,7 @@ const Message = require("../model/messages");
 const Distributor = require("../model/distributor");
 const Resume = require("../model/resume");
 
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -330,6 +331,7 @@ module.exports.resume = [
   // body("phone").not().isEmpty().withMessage("Phone Field is required"),
   // body("address1").not().isEmpty().withMessage("address Field is required"),
   // body("address2").not().isEmpty().withMessage("address Field is required"),
+  // body("resumePDF").not().isEmpty().withMessage("File Resume Field is required"),
 
   async (req, res) => {
     try {
@@ -347,16 +349,31 @@ module.exports.resume = [
           address2,
         } = req.body;
 
-        // Create a new Distributor instance and save it to the database
-        const resume = new Resume({
-          firstName,
-          lastName,
-          phone,
-          address1,
-          address2,
-        });
+        const resume = req.files.file;
+        // console.log("first", req.file);
+        console.log("request body -> ", req.files.file);
 
-        await resume.save();
+        const pdfBuffer = req.files.file.data;
+        const pdfFilename = req.files.file.name;
+
+        // const extension = image.name.split(".").pop();
+        // const fileName = `${new Date().getTime()}-${Math.random()}.${extension}`;
+        // let imgUrl = await uploadFileImage(image.data, fileName);
+        // await doc.create({ name, bool, image: imageYrl)
+        // return res.status(200).json({ success })
+
+
+
+        // const resume = new Resume({
+        //   firstName,
+        //   lastName,
+        //   phone,
+        //   address1,
+        //   address2,
+        //   // pdfFilePath,
+        // });
+
+        // await resume.save();
 
         // Send email notification to your personal email address
         let mailOptions = {
@@ -402,8 +419,19 @@ module.exports.resume = [
               <td>Address 2:</td>
               <td>${address2}</td>
             </tr>
+            <tr>
+              <td>Address 2:</td>
+              <td>${address2}</td>
+            </tr>
+
           </table>
         `,
+          attachments: [
+            {
+              filename: pdfFilename, // Use the original filename
+              content: pdfBuffer, // The PDF file buffer received in the request
+            },
+          ],
         };
 
         transporter.sendMail(mailOptions, function (error, info) {
@@ -412,14 +440,16 @@ module.exports.resume = [
           } else {
             console.log('Email sent: ' + info.response);
           }
+
+          // fs.unlinkSync(pdfFilePath);
         });
 
         console.log('remove')
         res.status(200).json({ message: 'Successful', resume });
       }
     } catch (error) {
-      console.log(error);
-      res.status(500).json(error);
+      console.log(error.message);
+      res.status(400).json(error);
     }
   }
 ];
