@@ -34,7 +34,11 @@ module.exports.subscriber = [
           subject: "Subscription Request",
           to: process.env.TO_EMAIL,
           // template: "subscription", to do later for betterment
-          html: `<p> Hi, ${email} has requested to Subscribe Benz Packaging. </p>`,
+          html: `
+          <h1>🎉 Congratulations A New Subscriber 🎉</h1>
+              <h2> Hi, <strong>${name}</strong> has 🙌 requested to Subscribe Benz Packaging. </h2>
+              <p> Sender's Email : <strong>${email}</strong> </p>
+          </p>`,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
@@ -92,7 +96,13 @@ module.exports.message = [
           subject: "Message Request",
           to: process.env.TO_EMAIL,
           // template: "subscription", to do later for betterment
-          html: `<p> Hi, ${email} has requested to Contact Benz Packaging. </p>`,
+          html: `
+              <h1>Contact Request & Requirements </h1>
+              <h2> Hi, <strong>${name}</strong> has 🙌 requested to Contact Benz Packaging. </h2>
+              <p> Sender's Email : <strong>${email}</strong> </p>
+              <p> Sender's Phone : <strong>${phone}</strong> </p>
+              <p> Sender's Message : <strong>${message}</strong> </p>
+          `,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
@@ -135,7 +145,10 @@ module.exports.subscriber_email = [
           subject: "Subscription Request",
           to: process.env.TO_EMAIL,
           // template: "subscription", to do later for betterment
-          html: `<p> Hi, ${email} has requested to Subscribe Benz Packaging. </p>`,
+          html: `
+          <h1>🎉 Congratulations A New Subscriber 🎉</h1>
+          <h2> Hi, <strong>${email}</strong> has 🙌 requested to Subscribe Benz Packaging. </h2>
+          `,
         };
         transporter.sendMail(mailOptions, function (error, info) {
           if (error) {
@@ -351,7 +364,7 @@ module.exports.resume = [
 
         const resume = req.files.file;
         // console.log("first", req.file);
-        console.log("request body -> ", req.files.file);
+        // console.log("request body -> ", req.files.file);
 
         const pdfBuffer = req.files.file.data;
         const pdfFilename = req.files.file.name;
@@ -396,8 +409,7 @@ module.exports.resume = [
             background-color: #f2f2f2;
           }
         </style>
-          <p> Hi,</p>
-            <p>A new Resume has been submitted with the following details:</p>
+            <h1>A new Resume has been submitted with the following details:</h1>
             <table border="1" cellpadding="5" cellspacing="0">
             <tr>
               <td>First Name:</td>
@@ -419,11 +431,6 @@ module.exports.resume = [
               <td>Address 2:</td>
               <td>${address2}</td>
             </tr>
-            <tr>
-              <td>Address 2:</td>
-              <td>${address2}</td>
-            </tr>
-
           </table>
         `,
           attachments: [
